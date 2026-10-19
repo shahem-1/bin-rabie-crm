@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/conversations/page": "/conversations",
+  "/customers/page": "/customers",
+  "/employees/page": "/employees",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/page": "/",
+  "/profile/page": "/profile",
+  "/reports/page": "/reports",
+  "/scheduled/page": "/scheduled",
+  "/settings/page": "/settings",
+  "/tasks/page": "/tasks"
+}

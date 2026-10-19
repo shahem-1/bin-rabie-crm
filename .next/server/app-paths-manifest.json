@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/conversations/page": "app/conversations/page.js",
+  "/customers/page": "app/customers/page.js",
+  "/employees/page": "app/employees/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/reports/page": "app/reports/page.js",
+  "/scheduled/page": "app/scheduled/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/tasks/page": "app/tasks/page.js"
+}

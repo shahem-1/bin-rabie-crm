@@ -1,0 +1,36 @@
+{
+  "status": 200,
+  "headers": {
+    "link": "</_next/static/media/9ff27b8a0a8f3dc0-s.p.40_3w74kn95bo.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/d41831e24743a3c1-s.p.08tn9snzkmifr.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\"",
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/conversations/layout,_N_T_/conversations/page,_N_T_/conversations"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/conversations/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 49216,
+    "slots": {
+      "children": {
+        "hints": 49248,
+        "slots": {
+          "children": {
+            "hints": 49312,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/668bb9911f168bb44763886e8b0a7313c32749354f13c399dfc41c509036a642/$/conversations",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/conversations/page"
+    },
+    "isFallback": false
+  }
+}
