@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+:root {
+  /* Light theme (default) - improved contrast for better visibility */
+  --background: #f1f5f9;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-hover: #f8fafc;
+  --brand: #1d4ed8;
+  --brand-dark: #1e40af;
+  --brand-light: #dbeafe;
+  --sidebar: #0f172a;
+  --sidebar-hover: #1e293b;
+  --sidebar-foreground: #f8fafc;
+  --line: #cbd5e1;
+  --muted: #475569;
+  --success: #16a34a;
+  --warning: #d97706;
+  --error: #dc2626;
+  --focus-ring: #1d4ed8;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Transitions */
+  --transition-fast: 100ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-hover: #334155;
+  --brand: #60a5fa;
+  --brand-dark: #3b82f6;
+  --brand-light: #1e3a5f;
+  --sidebar: #020617;
+  --sidebar-hover: #0f172a;
+  --sidebar-foreground: #f8fafc;
+  --line: #475569;
+  --muted: #94a3b8;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --focus-ring: #60a5fa;
+}
+
+.density-compact {
+  --card-padding: var(--space-3);
+  --kpi-padding: var(--space-3);
+  --table-cell-padding: var(--space-2);
+  --input-padding: var(--space-1) var(--space-2);
+  --button-padding: var(--space-1) var(--space-2);
+  --gap-sm: var(--space-1);
+  --gap-md: var(--space-2);
+}
+
+/* Density: Compact Mode Global Overrides */
+.density-compact table td,
+.density-compact table th {
+  padding-top: 0.35rem !important;
+  padding-bottom: 0.35rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.density-compact .p-5,
+.density-compact .p-6 {
+  padding: 0.85rem !important;
+}
+
+:not(.density-compact) {
+  --card-padding: var(--space-5);
+  --kpi-padding: var(--space-5);
+  --table-cell-padding: var(--space-3);
+  --input-padding: var(--space-2) var(--space-3);
+  --button-padding: var(--space-2) var(--space-4);
+  --gap-sm: var(--space-2);
+  --gap-md: var(--space-3);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-foreground: #f8fafc;
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-focus-ring: var(--focus-ring);
+  --font-sans: var(--font-cairo);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-cairo), "Segoe UI", Tahoma, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9d5e6 transparent;
+}
+
+.dark * {
+  scrollbar-color: #475569 transparent;
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--line) 25%,
+    var(--muted) 50%,
+    var(--line) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--line) 25%,
+    var(--muted) 50%,
+    var(--line) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* Focus visible rings */
+*:focus-visible {
+  outline: none;
+  ring: 2px solid var(--focus-ring);
+  ring-offset: 2px;
+  ring-offset-background: var(--background);
+}
+
+/* Select dropdown visibility fixes - explicit colors for both themes */
+select {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+select option {
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 8px 12px;
+}
+
+.dark select {
+  background-color: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+.dark select option {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+/* Ensure option text is visible in dropdown */
+select:not([multiple]) option {
+  background-color: inherit;
+  color: inherit;
+}
+
+/* Micro-interactions */
+.btn-interactive {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.btn-interactive:active {
+  transform: scale(0.97);
+}
+
+.card-interactive {
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: var(--brand);
+}
+
+.dark .card-interactive:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* Dropdown item hover improvements */
+.dropdown-enter button:hover {
+  background-color: var(--muted);
+}
+
+.dark .dropdown-enter button:hover {
+  background-color: var(--card-hover);
+}
+
+/* Dropdown animations */
+.dropdown-enter {
+  animation: dropdownIn var(--transition-fast) ease-out;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Chart colors using CSS variables */
+.chart-grid { stroke: var(--line); }
+.chart-axis { stroke: var(--muted); }
+.chart-brand { fill: var(--brand); stroke: var(--brand); }
+.chart-brand-light { fill: var(--brand-light); stroke: var(--brand-light); }
+
+/* KPI card tint colors using CSS variables for dark mode support */
+.tint-conversations { background: var(--brand-light); color: var(--brand); }
+.tint-newclients { background: #dcfce7; color: #16a34a; }
+.tint-opportunities { background: #fef3c7; color: #d97706; }
+.tint-dailysales { background: #ede9fe; color: #7c3aed; }
+
+.dark .tint-newclients { background: #14532d; color: #4ade80; }
+.dark .tint-opportunities { background: #78350f; color: #fbbf24; }
+.dark .tint-dailysales { background: #3b0764; color: #a78bfa; }
+
+/* Live indicator pulse animations */
+.pulse-conversations { animation: pulse-ring 3s ease-in-out infinite; }
+.pulse-newclients { animation: pulse-ring 3.5s ease-in-out infinite; }
+.pulse-opportunities { animation: pulse-ring 4s ease-in-out infinite; }
+.pulse-dailysales { animation: pulse-ring 2.5s ease-in-out infinite; }
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 var(--brand); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 var(--brand); }
+}
+
+/* Live badge animation */
+.live-badge {
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Timestamp freshness */
+.timestamp-fresh {
+  color: var(--success);
+}
+.timestamp-recent {
+  color: var(--warning);
+}
+.timestamp-old {
+  color: var(--muted);
+}
