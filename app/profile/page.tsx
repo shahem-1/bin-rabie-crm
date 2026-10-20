@@ -41,7 +41,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex items-center gap-3 text-muted">
               <Phone size={16} className="text-brand" />
-              <span className="text-foreground font-medium">+971 4 000 0000</span>
+              <span className="text-foreground font-medium">+966 4 000 0000</span>
             </div>
             <div className="flex items-center gap-3 text-muted">
               <Building2 size={16} className="text-brand" />
