@@ -26,8 +26,11 @@ interface Message {
   time: string;
 }
 
+const DEFAULT_KEY = "";
+
 export default function AnalysisPage() {
   const { lang, companyId } = useStore();
+  const [apiKey, setApiKey] = useState("");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeFile, setActiveFile] = useState<{ name: string; content: string; size: number } | null>(null);
@@ -63,6 +66,13 @@ export default function AnalysisPage() {
           "📈 Compare channel efficiency (WhatsApp vs Instagram)",
           "⚠️ What are the high-priority pending tasks?",
         ];
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("binrabie.ai_key");
+      setApiKey(stored || DEFAULT_KEY);
+    } catch {}
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -148,6 +158,7 @@ export default function AnalysisPage() {
           crmContext: getCrmContext(),
           fileData: activeFile?.content || null,
           fileName: activeFile?.name || null,
+          apiKey: apiKey || DEFAULT_KEY,
         }),
       });
 

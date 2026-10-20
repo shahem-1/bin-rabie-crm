@@ -14,8 +14,8 @@ import {
   RotateCcw,
   Maximize2,
   Minimize2,
-  CheckCircle2,
-  HelpCircle,
+  Key,
+  Check,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { companies, groupKpis, customers, tasks, conversations, months, groupSales, sources } from "@/lib/data";
@@ -27,16 +27,39 @@ interface Message {
   time: string;
 }
 
+const DEFAULT_KEY = "";
+
 export function AiAnalystChat() {
   const { lang, companyId } = useStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [keyInput, setKeyInput] = useState("");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeFile, setActiveFile] = useState<{ name: string; content: string; size: number } | null>(null);
   const [uploadLoading, setUploadLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize API key from localStorage or fallback
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("binrabie.ai_key");
+      const initial = stored || DEFAULT_KEY;
+      setApiKey(initial);
+      setKeyInput(initial);
+    } catch {}
+  }, []);
+
+  const saveApiKey = (newKey: string) => {
+    setApiKey(newKey);
+    try {
+      localStorage.setItem("binrabie.ai_key", newKey);
+    } catch {}
+    setShowKeyModal(false);
+  };
 
   const initialWelcome =
     lang === "ar"
@@ -159,6 +182,7 @@ export function AiAnalystChat() {
           crmContext: getCrmContext(),
           fileData: activeFile?.content || null,
           fileName: activeFile?.name || null,
+          apiKey: apiKey || DEFAULT_KEY,
         }),
       });
 
@@ -246,12 +270,23 @@ export function AiAnalystChat() {
                   <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 </div>
                 <div className="text-[11px] text-sidebar-foreground/70">
-                  {lang === "ar" ? "مجموعة بن ربعي القابضة · GPT-4o" : "Bin Rabie Holding · GPT-4o"}
+                  {lang === "ar" ? "مجموعة بن ربعي القابضة · AI" : "Bin Rabie Holding · AI"}
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-1">
+              <button
+                onClick={() => setShowKeyModal(!showKeyModal)}
+                className={`rounded-lg p-1.5 transition ${
+                  showKeyModal
+                    ? "bg-brand text-white"
+                    : "text-sidebar-foreground/70 hover:bg-white/10 hover:text-sidebar-foreground"
+                }`}
+                title={lang === "ar" ? "إعدادات مفتاح الذكاء الاصطناعي (API Key)" : "AI API Key Settings"}
+              >
+                <Key size={15} />
+              </button>
               <button
                 onClick={() => setMessages([messages[0]])}
                 className="rounded-lg p-1.5 text-sidebar-foreground/70 hover:bg-white/10 hover:text-sidebar-foreground transition"
@@ -274,6 +309,37 @@ export function AiAnalystChat() {
               </button>
             </div>
           </div>
+
+          {/* Key Management Sub-Panel */}
+          {showKeyModal && (
+            <div className="border-b border-line bg-muted/60 p-3 text-xs space-y-2">
+              <div className="flex items-center justify-between font-bold text-foreground">
+                <span className="flex items-center gap-1.5">
+                  <Key size={13} className="text-brand" />
+                  {lang === "ar" ? "مفتاح الذكاء الاصطناعي (Google Gemini / OpenAI)" : "AI API Key"}
+                </span>
+                <span className="text-[10px] text-emerald-600 font-semibold">
+                  {apiKey.startsWith("sk-") ? "OpenAI Model" : "Google Gemini"}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="password"
+                  value={keyInput}
+                  onChange={(e) => setKeyInput(e.target.value)}
+                  placeholder="Paste Gemini or OpenAI key..."
+                  className="flex-1 rounded-lg border border-line bg-background px-2.5 py-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-brand"
+                />
+                <button
+                  onClick={() => saveApiKey(keyInput)}
+                  className="flex items-center gap-1 rounded-lg bg-brand px-3 py-1 font-semibold text-white hover:bg-brand/90 transition"
+                >
+                  <Check size={12} />
+                  <span>{lang === "ar" ? "حفظ" : "Save"}</span>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Active Data Source Status Banner */}
           <div className="flex items-center justify-between border-b border-line bg-muted/40 px-4 py-2 text-xs">
@@ -366,7 +432,7 @@ export function AiAnalystChat() {
                     <span className="h-1.5 w-1.5 rounded-full bg-brand animate-bounce [animation-delay:0.2s]"></span>
                     <span className="h-1.5 w-1.5 rounded-full bg-brand animate-bounce [animation-delay:0.4s]"></span>
                     <span className="text-muted text-[11px] ms-1">
-                      {lang === "ar" ? "جاري قراءة البيانات والتحليل..." : "Analyzing data..."}
+                      {lang === "ar" ? "جاري قراءة البيانات والتحليل عبر AI..." : "Analyzing data via AI..."}
                     </span>
                   </div>
                 </div>
