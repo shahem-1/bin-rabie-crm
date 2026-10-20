@@ -2,10 +2,11 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
-const port = parseInt(process.env.PORT, 10) || 3000;
+// Try PORT first, then SERVER_PORT, then default to 3000
+const port = parseInt(process.env.PORT || process.env.SERVER_PORT || '3000', 10);
 const hostname = '0.0.0.0';
 
-console.log(`Starting server on port ${port}, env PORT=${process.env.PORT}, SERVER_PORT=${process.env.SERVER_PORT}`);
+console.log(`Starting server on port ${port} (Source: ${process.env.PORT ? 'PORT' : process.env.SERVER_PORT ? 'SERVER_PORT' : 'Default'})`);
 
 const app = next({ dev: false });
 const handle = app.getRequestHandler();
