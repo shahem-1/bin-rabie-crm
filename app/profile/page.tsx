@@ -45,7 +45,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex items-center gap-3 text-muted">
               <Building2 size={16} className="text-brand" />
-              <span className="text-foreground font-medium">{lang === "ar" ? "المقر الرئيسي - دبي / أبوظبي" : "HQ - Dubai / Abu Dhabi"}</span>
+              <span className="text-foreground font-medium">{lang === "ar" ? "المقر الرئيسي - جدة / المملكة العربية السعودية" : "HQ - Jeddah, Saudi Arabia"}</span>
             </div>
           </div>
         </div>
