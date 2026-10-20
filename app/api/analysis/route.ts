@@ -44,34 +44,34 @@ async function callGemini(apiKey: string, systemPrompt: string, messages: any[])
     contents: contents.length > 0 ? contents : [{ role: "user", parts: [{ text: "Hello" }] }],
   };
 
-  // Try Gemini 2.0 Flash first, fallback to 1.5 Flash
-  const url2 = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  const res2 = await fetch(url2, {
+  // Use Gemini 3.8 Flash which successfully responded in our tests
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  if (res2.ok) {
-    const data = await res2.json();
+  if (res.ok) {
+    const data = await res.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم استلام رد من Gemini.";
   }
 
-  // Fallback to gemini-1.5-flash
-  const url15 = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-  const res15 = await fetch(url15, {
+  // Fallback to gemini-3.1-pro-preview
+  const urlPro = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key=${apiKey}`;
+  const resPro = await fetch(urlPro, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  if (!res15.ok) {
-    const err = await res15.json().catch(() => ({}));
-    throw new Error(err.error?.message || `Gemini API error (Status ${res15.status})`);
+  if (!resPro.ok) {
+    const err = await resPro.json().catch(() => ({}));
+    throw new Error(err.error?.message || `Gemini API error (Status ${resPro.status})`);
   }
 
-  const data15 = await res15.json();
-  return data15.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم استلام رد من Gemini.";
+  const dataPro = await resPro.json();
+  return dataPro.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم استلام رد من Gemini.";
 }
 
 export async function POST(req: NextRequest) {
@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
 
       const activeKey =
         apiKey ||
-        process.env.GEMINI_API_KEY ||
+        process.env.OPENAI_API_KEY ||
         process.env.GOOGLE_API_KEY ||
-        process.env.OPENAI_API_KEY;
+        process.env.GEMINI_API_KEY;
 
       let systemContent = `You are the expert Executive AI Data Analyst for "Bin Rabie Holding Group" (مجموعة بن ربعي القابضة), a prominent Saudi holding group operating in trading, transport, car rental, and logistics.
 Your mission is to provide sharp, accurate, data-driven analysis and insights based on the available data.
@@ -109,13 +109,13 @@ Use structured Markdown (bullet points, bold figures, and tables where helpful) 
 
       if (!activeKey) {
         return NextResponse.json({
-          reply: `⚠️ تنبيه: لم يتم إدخال مفتاح الذكاء الاصطناعي (Google Gemini أو OpenAI).\n\nيمكنك إدخال المفتاح مباشرة من أيقونة الإعدادات ⚙️ أعلى المحادثة، أو من صفحة الإعدادات.\n\n📊 **ملخص فوري من بيانات النظام المتاحة محلياً:**\n- **المجموعة:** مجموعة بن ربعي القابضة.\n- **المبيعات اليومية:** 287,450 ريال سعودي.\n- **العملاء الجدد:** 856 عميلاً.\n- **المحادثات النشطة:** 1,248 محادثة.`,
+          reply: `⚠️ تنبيه: لم يتم إدخال مفتاح الذكاء الاصطناعي.\n\nيمكنك إدخال مفتاح OpenAI (sk-...) أو مفتاح Google Gemini مباشرة من أيقونة الإعدادات ⚙️ أعلى المحادثة.`,
         });
       }
 
       let reply = "";
       if (activeKey.startsWith("sk-")) {
-        // OpenAI Key
+        // OpenAI ChatGPT Key
         reply = await callOpenAi(activeKey, systemContent, messages);
       } else {
         // Google Gemini Key
