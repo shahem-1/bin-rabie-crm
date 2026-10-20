@@ -1,3 +1,6 @@
+// Make "AnalysisPage" a "client" component.
+"use client";
+
 import { useState } from "react";
 import Link from "next/link";
 
