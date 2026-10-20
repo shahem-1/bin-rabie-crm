@@ -22,13 +22,12 @@ async function callOpenAi(apiKey: string, systemPrompt: string, messages: any[])
     }),
   });
 
+  const data = await response.json();
   if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || `OpenAI request failed: ${response.statusText}`);
+    throw new Error(data.error?.message || `OpenAI request failed: ${response.statusText}`);
   }
 
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || "لم يتم استلام رد من OpenAI.";
+  return data.choices?.[0]?.message?.content || "No response from OpenAI.";
 }
 
 async function callGemini(apiKey: string, systemPrompt: string, messages: any[]) {
@@ -44,7 +43,6 @@ async function callGemini(apiKey: string, systemPrompt: string, messages: any[])
     contents: contents.length > 0 ? contents : [{ role: "user", parts: [{ text: "Hello" }] }],
   };
 
-  // Use Gemini 3.8 Flash which successfully responded in our tests
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
@@ -52,32 +50,17 @@ async function callGemini(apiKey: string, systemPrompt: string, messages: any[])
     body: JSON.stringify(payload),
   });
 
+  const data = await res.json();
   if (res.ok) {
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم استلام رد من Gemini.";
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini.";
   }
 
-  // Fallback to gemini-3.1-pro-preview
-  const urlPro = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key=${apiKey}`;
-  const resPro = await fetch(urlPro, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!resPro.ok) {
-    const err = await resPro.json().catch(() => ({}));
-    throw new Error(err.error?.message || `Gemini API error (Status ${resPro.status})`);
-  }
-
-  const dataPro = await resPro.json();
-  return dataPro.candidates?.[0]?.content?.parts?.[0]?.text || "لم يتم استلام رد من Gemini.";
+  throw new Error(data.error?.message || `Gemini API error (Status ${res.status})`);
 }
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get("content-type") || "";
 
-  // 1. Handle JSON Chat Requests
   if (contentType.includes("application/json")) {
     try {
       const body = await req.json();
@@ -85,9 +68,8 @@ export async function POST(req: NextRequest) {
 
       const activeKey =
         apiKey ||
-        process.env.OPENAI_API_KEY ||
-        process.env.GOOGLE_API_KEY ||
-        process.env.GEMINI_API_KEY;
+        process.env.GEMINI_API_KEY ||
+        process.env.OPENAI_API_KEY;
 
       let systemContent = `You are the expert Executive AI Data Analyst for "Bin Rabie Holding Group" (مجموعة بن ربعي القابضة), a prominent Saudi holding group operating in trading, transport, car rental, and logistics.
 Your mission is to provide sharp, accurate, data-driven analysis and insights based on the available data.
@@ -109,16 +91,29 @@ Use structured Markdown (bullet points, bold figures, and tables where helpful) 
 
       if (!activeKey) {
         return NextResponse.json({
-          reply: `⚠️ تنبيه: لم يتم إدخال مفتاح الذكاء الاصطناعي.\n\nيمكنك إدخال مفتاح OpenAI (sk-...) أو مفتاح Google Gemini مباشرة من أيقونة الإعدادات ⚙️ أعلى المحادثة.`,
+          reply: `⚠️ Please enter your API key using the key icon (🔑) in the chat header.`,
         });
       }
 
       let reply = "";
       if (activeKey.startsWith("sk-")) {
-        // OpenAI ChatGPT Key
-        reply = await callOpenAi(activeKey, systemContent, messages);
+        try {
+          reply = await callOpenAi(activeKey, systemContent, messages);
+        } catch (openaiErr: any) {
+          if (openaiErr.message?.includes("quota") || openaiErr.message?.includes("credits") || openaiErr.message?.includes("insufficient")) {
+            // Fallback to Gemini using environment variable or safe default
+            const fallbackKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "";
+            if (fallbackKey) {
+              reply = await callGemini(fallbackKey, systemContent, messages);
+              reply = `*(Note: OpenAI returned a billing quota error, so I automatically answered using Google Gemini 3.8 Flash)*\n\n` + reply;
+            } else {
+              throw new Error("OpenAI quota exhausted and no backup Gemini API key found in environment variables.");
+            }
+          } else {
+            throw openaiErr;
+          }
+        }
       } else {
-        // Google Gemini Key
         reply = await callGemini(activeKey, systemContent, messages);
       }
 
@@ -128,12 +123,11 @@ Use structured Markdown (bullet points, bold figures, and tables where helpful) 
     }
   }
 
-  // 2. Handle Multipart Form-Data (file uploads)
   try {
     const form = await req.formData();
     const file = form.get("dataset") as File | null;
     if (!file) {
-      return NextResponse.json({ error: 'No file provided under "dataset" key' }, { status: 400 });
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
     const csvText = await file.text();
@@ -141,9 +135,9 @@ Use structured Markdown (bullet points, bold figures, and tables where helpful) 
       fileName: file.name,
       fileSize: file.size,
       rawContent: csvText,
-      summary: `تم قراءة الملف (${file.name}) بنجاح. الحجم: ${Math.round(file.size / 1024)} كيلوبايت.`,
+      summary: `File (${file.name}) loaded successfully. Size: ${Math.round(file.size / 1024)} KB.`,
     });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message || "Failed to process upload" }, { status: 500 });
+    return NextResponse.json({ error: err.message || "Failed to process process upload" }, { status: 500 });
   }
 }
