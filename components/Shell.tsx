@@ -32,6 +32,7 @@ import { useStore } from "@/lib/store";
 import { Dropdown } from "./Dropdown";
 import { CommandPalette } from "./CommandPalette";
 import { ToastProvider } from "./Toast";
+import { AiAnalystChat } from "./AiAnalystChat";
 
 const subsidiaries = [
   { ar: "شركة بن ربعي للتجارة والخدمات", en: "Bin Rabie Trading & Services" },
@@ -284,6 +285,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         <main className="flex-1 p-6">{children}</main>
       </div>
 
+      <AiAnalystChat />
       <CommandPalette />
       </div>
     </ToastProvider>
