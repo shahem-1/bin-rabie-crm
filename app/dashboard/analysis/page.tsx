@@ -26,11 +26,10 @@ interface Message {
   time: string;
 }
 
-const DEFAULT_KEY = "";
 
 export default function AnalysisPage() {
   const { lang, companyId } = useStore();
-  const [apiKey, setApiKey] = useState("");
+  const [sessionId] = useState("analysis-page-chat");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeFile, setActiveFile] = useState<{ name: string; content: string; size: number } | null>(null);
@@ -68,13 +67,6 @@ export default function AnalysisPage() {
         ];
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("binrabie.ai_key");
-      setApiKey(stored || DEFAULT_KEY);
-    } catch {}
-  }, []);
-
-  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
@@ -104,12 +96,34 @@ export default function AnalysisPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > 5 * 1024 * 1024) {
+      alert(lang === "ar" ? "حجم الملف الأقصى 5 ميغابايت." : "Maximum file size is 5 MB.");
+      e.target.value = "";
+      return;
+    }
+
+    if (!/\.(csv|txt|json|xlsx)$/i.test(file.name)) {
+      alert(lang === "ar" ? "الملفات المدعومة: CSV وTXT وJSON وXLSX." : "Supported files: CSV, TXT, JSON, and XLSX.");
+      e.target.value = "";
+      return;
+    }
+
     setUploadLoading(true);
     try {
-      const text = await file.text();
+      let content: string;
+      if (/\.xlsx$/i.test(file.name)) {
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        let binary = "";
+        for (let i = 0; i < bytes.length; i += 0x8000) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+        }
+        content = `base64:${btoa(binary)}`;
+      } else {
+        content = await file.text();
+      }
       setActiveFile({
         name: file.name,
-        content: text,
+        content,
         size: file.size,
       });
 
@@ -154,11 +168,11 @@ export default function AnalysisPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: newHistory.map((m) => ({ role: m.role, content: m.content })),
+          sessionId,
+          messages: newHistory.filter((m) => m.id !== "welcome").map((m) => ({ role: m.role, content: m.content })),
           crmContext: getCrmContext(),
           fileData: activeFile?.content || null,
           fileName: activeFile?.name || null,
-          apiKey: apiKey || DEFAULT_KEY,
         }),
       });
 
@@ -201,7 +215,7 @@ export default function AnalysisPage() {
         type="file"
         ref={fileInputRef}
         onChange={handleFileUpload}
-        accept=".csv,.txt,.json"
+        accept=".csv,.txt,.json,.xlsx"
         className="hidden"
       />
 
