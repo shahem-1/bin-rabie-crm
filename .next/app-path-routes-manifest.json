@@ -1,8 +1,11 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/analysis/page": "/analysis",
+  "/api/analysis/route": "/api/analysis",
   "/conversations/page": "/conversations",
   "/customers/page": "/customers",
+  "/dashboard/analysis/page": "/dashboard/analysis",
   "/employees/page": "/employees",
   "/favicon.ico/route": "/favicon.ico",
   "/login/page": "/login",

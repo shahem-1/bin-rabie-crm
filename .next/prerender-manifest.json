@@ -6,7 +6,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 64907,
+      "htmlSize": 66316,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -79,7 +79,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 24121,
+      "htmlSize": 25523,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -110,12 +110,48 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/analysis": {
+      "renderingMode": "PARTIALLY_STATIC",
+      "routeType": "page",
+      "response": "complete",
+      "compute": "static",
+      "htmlSize": 31302,
+      "experimentalPPR": true,
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(?:[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight).*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/analysis",
+      "dataRoute": "/analysis.rsc",
+      "prefetchDataRoute": "/analysis.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/conversations": {
       "renderingMode": "PARTIALLY_STATIC",
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 29701,
+      "htmlSize": 31116,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -151,7 +187,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 37501,
+      "htmlSize": 38916,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -182,12 +218,48 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/dashboard/analysis": {
+      "renderingMode": "PARTIALLY_STATIC",
+      "routeType": "page",
+      "response": "complete",
+      "compute": "static",
+      "htmlSize": 31823,
+      "experimentalPPR": true,
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(?:[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight).*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/dashboard/analysis",
+      "dataRoute": "/dashboard/analysis.rsc",
+      "prefetchDataRoute": "/dashboard/analysis.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/employees": {
       "renderingMode": "PARTIALLY_STATIC",
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 33410,
+      "htmlSize": 34825,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -256,7 +328,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 26292,
+      "htmlSize": 27707,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -292,7 +364,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 27313,
+      "htmlSize": 28762,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -328,7 +400,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 25898,
+      "htmlSize": 27313,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -364,7 +436,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 31428,
+      "htmlSize": 32843,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -400,7 +472,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 31979,
+      "htmlSize": 33394,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {
@@ -436,7 +508,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 31610,
+      "htmlSize": 33025,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {

@@ -1,8 +1,11 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/analysis/page": "app/analysis/page.js",
+  "/api/analysis/route": "app/api/analysis/route.js",
   "/conversations/page": "app/conversations/page.js",
   "/customers/page": "app/customers/page.js",
+  "/dashboard/analysis/page": "app/dashboard/analysis/page.js",
   "/employees/page": "app/employees/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/login/page": "app/login/page.js",

@@ -7,9 +7,9 @@ globalThis.__BUILD_MANIFEST = {
     "static/chunks/0cz1d0mv5g_q7.js"
   ],
   "lowPriorityFiles": [
-    "static/joaYDG30kwZxFLsPd4U-F/_buildManifest.js",
-    "static/joaYDG30kwZxFLsPd4U-F/_ssgManifest.js",
-    "static/joaYDG30kwZxFLsPd4U-F/_clientMiddlewareManifest.js"
+    "static/yMq3KXo9l1Sl_7u3Fs-y0/_buildManifest.js",
+    "static/yMq3KXo9l1Sl_7u3Fs-y0/_ssgManifest.js",
+    "static/yMq3KXo9l1Sl_7u3Fs-y0/_clientMiddlewareManifest.js"
   ],
   "rootMainFiles": [
     "static/chunks/0-o74znen4827.js",
@@ -53,6 +53,17 @@ globalThis.__BUILD_MANIFEST = {
         94553
       ]
     },
+    "/analysis/page": {
+      "otherChunks": [
+        "static/chunks/0-o74znen4827.js",
+        "static/chunks/18mt2xqy435yt.js",
+        "static/chunks/0p_w__bs2_j30.js",
+        "static/chunks/1udokk478a5sr.js"
+      ],
+      "runtimeModuleIds": [
+        94553
+      ]
+    },
     "/conversations/page": {
       "otherChunks": [
         "static/chunks/0-o74znen4827.js",
@@ -65,6 +76,17 @@ globalThis.__BUILD_MANIFEST = {
       ]
     },
     "/customers/page": {
+      "otherChunks": [
+        "static/chunks/0-o74znen4827.js",
+        "static/chunks/18mt2xqy435yt.js",
+        "static/chunks/0p_w__bs2_j30.js",
+        "static/chunks/1udokk478a5sr.js"
+      ],
+      "runtimeModuleIds": [
+        94553
+      ]
+    },
+    "/dashboard/analysis/page": {
       "otherChunks": [
         "static/chunks/0-o74znen4827.js",
         "static/chunks/18mt2xqy435yt.js",

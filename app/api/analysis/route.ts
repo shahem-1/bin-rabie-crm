@@ -7,7 +7,7 @@ const MAX_DATA_CHARS = 60_000;
 const REQUEST_TIMEOUT_MS = 25_000;
 
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
-const NVIDIA_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b";
+const NVIDIA_DEFAULT_MODEL = "nemotron-3-ultra";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type RequestBody = {

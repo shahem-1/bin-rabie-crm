@@ -22,6 +22,20 @@
       }
     }
   },
+  "/analysis": {
+    "hints": 49216,
+    "slots": {
+      "children": {
+        "hints": 49248,
+        "slots": {
+          "children": {
+            "hints": 49312,
+            "slots": null
+          }
+        }
+      }
+    }
+  },
   "/conversations": {
     "hints": 49216,
     "slots": {
@@ -45,6 +59,25 @@
           "children": {
             "hints": 49312,
             "slots": null
+          }
+        }
+      }
+    }
+  },
+  "/dashboard/analysis": {
+    "hints": 49216,
+    "slots": {
+      "children": {
+        "hints": 49248,
+        "slots": {
+          "children": {
+            "hints": 49248,
+            "slots": {
+              "children": {
+                "hints": 49312,
+                "slots": null
+              }
+            }
           }
         }
       }
