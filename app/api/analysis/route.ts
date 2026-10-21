@@ -6,6 +6,9 @@ const runtime = "nodejs";
 const MAX_DATA_CHARS = 60_000;
 const REQUEST_TIMEOUT_MS = 25_000;
 
+const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
+const NVIDIA_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b";
+
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type RequestBody = {
   messages?: ChatMessage[];
@@ -51,13 +54,18 @@ async function getReply(body: RequestBody) {
   }
 
   // Never trust or accept API keys from a browser request. Use a server-side secret.
-  // Prefer Gemini when configured, then OpenAI.
+  // Prefer NVIDIA NIM when configured, then Gemini, then OpenAI.
+  const nvidiaKey = process.env.NVIDIA_API_KEY || "";
+  const nvidiaModel = process.env.NVIDIA_MODEL || NVIDIA_DEFAULT_MODEL;
   const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "";
   const openaiKey = process.env.OPENAI_API_KEY || "";
   let apiKey = "";
-  let provider: "gemini" | "openai" = "gemini";
+  let provider: "nvidia" | "gemini" | "openai" = "nvidia";
 
-  if (geminiKey) {
+  if (nvidiaKey) {
+    apiKey = nvidiaKey;
+    provider = "nvidia";
+  } else if (geminiKey) {
     apiKey = geminiKey;
     provider = "gemini";
   } else if (openaiKey) {
@@ -66,7 +74,7 @@ async function getReply(body: RequestBody) {
   }
 
   if (!apiKey) {
-    return NextResponse.json({ error: "AI is not configured. Add GEMINI_API_KEY or OPENAI_API_KEY to the server environment." }, { status: 503 });
+    return NextResponse.json({ error: "AI is not configured. Add NVIDIA_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY to the server environment." }, { status: 503 });
   }
 
   let dataset = "";
@@ -89,6 +97,25 @@ async function getReply(body: RequestBody) {
   ].filter(Boolean).join("\n\n");
 
   try {
+    if (provider === "nvidia") {
+      const response = await postJson(NVIDIA_API_URL, {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      }, {
+        model: nvidiaModel,
+        temperature: 0.7,
+        messages: [
+          { role: "system", content: systemInstruction },
+          ...safeMessages.map(({ role, content }) => ({ role, content })),
+        ],
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error?.message || `NVIDIA request failed (${response.status})`);
+      const reply = data.choices?.[0]?.message?.content;
+      if (typeof reply !== "string" || !reply.trim()) throw new Error("NVIDIA returned an empty response.");
+      return NextResponse.json({ reply });
+    }
+
     if (provider === "openai") {
       const response = await postJson("https://api.openai.com/v1/chat/completions", {
         Authorization: `Bearer ${apiKey}`,
@@ -122,7 +149,8 @@ async function getReply(body: RequestBody) {
     );
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error?.message || `Gemini request failed (${response.status})`);
-    const reply = data.candidates?.[0]?.content?.parts?.map((part: any) => part.text || "").join("").trim();
+    const parts = data.candidates?.[0]?.content?.parts as Array<{ text?: string }> | undefined;
+    const reply = parts?.map((part) => part.text || "").join("").trim();
     if (!reply) throw new Error(data.promptFeedback?.blockReason || "Gemini returned an empty response.");
     return NextResponse.json({ reply });
   } catch (error) {
